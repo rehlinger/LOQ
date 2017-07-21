@@ -13,31 +13,25 @@ for(let i=1; i<=100; i++){
     i % 3 === 0 ? console.log("Fizz") : i % 5 === 0 ? console.log("Buzz") : console.log(i)
 }
 
-
 //Modify above to print FizzBuzz when number is divisible by both 3&5
-
 for (let i=1; i<=100; i++) {
-    switch (i % 3) {
-        case (0) : 
+    if (i % 3 === 0) {
         i % 5 === 0 ? console.log("FizzBuzz") : console.log("Fizz")
-        break
     }
     i % 5 === 0 ? console.log("Buzz") : console.log(i)
 }
 
-
 //1.3 Create an 8x8 chessboard pattern using pound signs
-for (let i =0; i<8; i++) {
+for (let y =0; y<8; y++) {
     str = ""
-    for (let col = 0; col<8; col++) {
-        if (col % 2 === 0) { 
-        i % 2 === 0 ? str += " " : str += "#" 
+    for (let x = 0; x < 8; x++) {
+        if (x % 2 === 0) { 
+        y % 2 === 0 ? str += " " : str += "#" 
         } else { 
-        i % 2 === 0 ? str += "#" : str += " " 
+        y % 2 === 0 ? str += "#" : str += " " 
         }
     }
     console.log(str)
 }
 
 */
-

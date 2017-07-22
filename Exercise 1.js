@@ -4,7 +4,7 @@
 let str = "#"
 for (let i = 0; i<7; i++) {
     console.log(str);
-    str += "#"
+    str += "#";
 }
 
 
@@ -16,22 +16,22 @@ for(let i=1; i<=100; i++){
 //Modify above to print FizzBuzz when number is divisible by both 3&5
 for (let i=1; i<=100; i++) {
     if (i % 3 === 0) {
-        i % 5 === 0 ? console.log("FizzBuzz") : console.log("Fizz")
+        i % 5 === 0 ? console.log("FizzBuzz") : console.log("Fizz");
     }
-    i % 5 === 0 ? console.log("Buzz") : console.log(i)
+    i % 5 === 0 ? console.log("Buzz") : console.log(i);
 }
 
 //1.3 Create an 8x8 chessboard pattern using pound signs
 for (let y =0; y<8; y++) {
-    str = ""
+    str = "";
     for (let x = 0; x < 8; x++) {
         if (x % 2 === 0) { 
-        y % 2 === 0 ? str += " " : str += "#" 
+        y % 2 === 0 ? str += " " : str += "#" ;
         } else { 
-        y % 2 === 0 ? str += "#" : str += " " 
+        y % 2 === 0 ? str += "#" : str += " "; 
         }
     }
-    console.log(str)
+    console.log(str);
 }
 
 */

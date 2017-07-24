@@ -1,10 +1,10 @@
 //1.1 Create 7 lines pound signs, with each new line having an additional sign.
 
 /*
-let str = "#"
-for (let i = 0; i<7; i++) {
-    console.log(str);
+let str = ""
+for (let i = 0; i<7; i++) {    
     str += "#";
+    console.log(str);
 }
 
 

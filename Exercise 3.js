@@ -118,18 +118,16 @@ function deepEqual(obj1, obj2) {
                 return false;
             } 
         }
-        if (propsOf1 !== propsOf2) {     
-            return false;
-        } 
-        return true;
+        return (propsOf1 === propsOf2) 
     } else { 
         return false;
     }
 }
 
-var obj1 = {here: {is: "an"}, object: 2};
+var obj1 = {new: 2, here: 8};
 (typeof obj1);
-var obj2 = {here: {is: "an"}, object: 2};
+var obj2 = {here: 8, object: 2};
 console.log(deepEqual(obj1, obj2));
 
 */
+

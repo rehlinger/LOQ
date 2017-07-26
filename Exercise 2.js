@@ -1,5 +1,5 @@
-/*
 //2.1 Write a function that will return the smallest of two given numbers
+/*
 function min(x, y) {
     if (x < y) {
         return x;
@@ -9,8 +9,9 @@ function min(x, y) {
 console.log(min(0, 10));
 console.log(min(0, -10));
 
-//2.2 Return a boolean of whether an inputted number is even recursively
-function isEven(x) {
+*///2.2 Return a boolean of whether an inputted number is even recursively
+/*
+function isEvenOld(x) {
     if (x === 0) {
         return true;
     }
@@ -24,7 +25,7 @@ function isEven(x) {
 
     //Fix previous to handle negative numbers
     function isEven(x) {
-        x = Math.abs(x)
+        x = Math.abs(x);
         if (x === 0) {
             return true;
         }
@@ -36,7 +37,9 @@ function isEven(x) {
         }
     }
 
-//2.3 Write function that takes a string and returns how many B's are in the given string
+console.log(isEven(75));
+*///2.3 Write function that takes a string and returns how many B's are in the given string
+/*
 function countBs(str) {
     let num = 0;
     for (let i = 0; i <= str.length-1 ; i++) {
@@ -57,4 +60,6 @@ function countBs(str) {
         }
         return num;
     }
+
+console.log(countChar("abcd", "e")); 
 */

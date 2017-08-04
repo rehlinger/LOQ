@@ -40,7 +40,7 @@ function SmartPlantEater() {
 //planteaters also require more energy to reproduce
 SmartPlantEater.prototype.act = function(view) {
     var space = view.find(" ");
-    if (this.energy > 60 && space) //decrease starting energy
+    if (this.energy > 65 && space) //decrease starting energy
       return {type: "reproduce", direction: space};
     var plant = view.find("*");
     var endangered = false;
@@ -57,17 +57,17 @@ SmartPlantEater.prototype.act = function(view) {
       return {type: "move", direction: space};
 }
 function Tiger() {
-    this.energy = 70;
+    this.energy = 120;
 }
 
 Tiger.prototype.act = function(view) {
     var space = view.find(" ");
-    if (this.energy > 160 && space) //hard time surviving reproduction!
+    if (this.energy > 240 && space) //hard time surviving reproduction!
         return {type: "reproduce", direction: space};
     var plantEater = view.find("O");
     if (plantEater)
         var attackHit = false;
-        if (Math.random() > .6) 
+        if (Math.random() > .75) //slippery plantEaters!
             return {type: "eat", direction: plantEater};
     if (space)
         return {type: "move", direction: space};

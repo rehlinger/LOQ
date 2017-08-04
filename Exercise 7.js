@@ -1,69 +1,74 @@
-//7.1 Write a function that wraps the given function and keeps retrying until a reply is given
+//6.1 Create a smarter plant eater that reprouces slower and allows the plants to never leave.
+//Create a target property of the plant eater, slightly reduced intial reproduction energy.
 /*
-function MultiplicatorUnitFailure() {} //given
-
-function primitiveMultiply(a, b) { //given
-  if (Math.random() < 0.5)
-    return a * b;
-  else
-    throw new MultiplicatorUnitFailure();
+function SmartPlantEater() {
+    this.energy = 30;
+    this.target = "n";
 }
-let tries = 1;
-function reliableMultiply(a, b) {
-   try {
-    return primitiveMultiply(a,b);
-   } catch (e) {
-    if (e instanceof MultiplicatorUnitFailure) {
-        tries += 1;
-        return reliableMultiply(a,b);
-    }
-    throw (e);
-   }
-} 
 
-console.log(reliableMultiply(8, 8));
-console.log(tries);
-*/
-//7.2 Write a function that unlocks the box, runs the function, and relocks the box
-/*
-var box = { //given
-    locked: true,
-    unlock: function () { this.locked = false; },
-    lock: function () { this.locked = true; },
-    _content: [],
-    get content() {
-        if (this.locked) throw new Error("Locked!");
-        return this._content;
-    }
-};
-
-function withBoxUnlocked(body) {
-    if(box.locked) {
-        box.unlock();
-        try {
-            return body();
-        } catch (e) {
-            //Remain Silent
-        } finally {
-            box.lock();
+//Using standard plant eater act method with the modification that
+//planteaters are allowed to eat only if the plant it is targeting has more than 1 nearby plant
+//planteaters also require more energy to reproduce
+SmartPlantEater.prototype.act = function(view) {
+    var space = view.find(" ");
+    if (this.energy > 90 && space) 
+      return {type: "reproduce", direction: space};
+    var plant = view.find("*");
+    var endangered = false;
+    if (plant) {
+        this.target = view.vector.plus(directions[plant]);
+        let plantView = new View(view.world, this.target)
+        if (plantView.findAll("*").length <= 2) {
+            endangered = true;
         }
-    } else {
-        return body();
     }
+    if (plant && !endangered)
+      return {type: "eat", direction: plant};
+    if (space)
+      return {type: "move", direction: space};
+}
+*/
+//6.2 Create a predator for the plantEater called Tiger
+/*
+function SmartPlantEater() {
+    this.energy = 30;
+    this.target = "n";
 }
 
-withBoxUnlocked(function () { //given
-    box.content.push("gold piece");
-});
-
-try {
-    withBoxUnlocked(function () { //given
-        throw new Error("Pirates on the horizon! Abort!");
-    });
-} catch (e) {
-    console.log("Error raised:", e);
+//Modified plantEater to be less picky with plant selection as world is more diverse
+SmartPlantEater.prototype.act = function(view) {
+    var space = view.find(" ");
+    if (this.energy > 65 && space) //decrease starting energy
+      return {type: "reproduce", direction: space};
+    var plant = view.find("*");
+    var endangered = false;
+    if (plant) {
+        this.target = view.vector.plus(directions[plant]);
+        let plantView = new View(view.world, this.target)
+        if (plantView.findAll("*").length <= 1) { //Remove picky eating requirment to stop from only eating the last plant in a bush
+            endangered = true;
+        }
+    }
+    if (plant && !endangered)
+      return {type: "eat", direction: plant};
+    if (space)
+      return {type: "move", direction: space};
+}
+function Tiger() {
+    this.energy = 120;
 }
 
-console.log(box.locked);
-console.log(box);
+Tiger.prototype.act = function(view) {
+    var space = view.find(" ");
+    if (this.energy > 240 && space) //hard time surviving reproduction!
+        return {type: "reproduce", direction: space};
+    var plantEater = view.find("O");
+    if (plantEater)
+        if (Math.random() > .75) //slippery plantEaters!
+            return {type: "eat", direction: plantEater};
+    if (space)
+        return {type: "move", direction: space};
+  }
+}
+
 */

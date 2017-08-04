@@ -1,65 +1,36 @@
-//2.1 Write a function that will return the smallest of two given numbers
+//1.1 Create 7 lines of pound signs, with each new line having an additional sign.
 /*
-function min(x, y) {
-    if (x < y) {
-        return x;
-    } return y;
+let str = ""
+for (let i = 0; i<7; i++) {    
+    str += "#";
+    console.log(str);
+}
+*///1.2 Write a program that logs the numbers 1-100. If the number is divisible by 3 output "Fizz". 
+//If number is divisible by 5 (but not 3) output "Buzz"
+/*
+for(let i=1; i<=100; i++){
+    i % 3 === 0 ? console.log("Fizz") : i % 5 === 0 ? console.log("Buzz") : console.log(i)
 }
 
-console.log(min(0, 10));
-console.log(min(0, -10));
-
-*///2.2 Return a boolean of whether an inputted number is even recursively
-/*
-function isEvenOld(x) {
-    if (x === 0) {
-        return true;
+//Modify above to print FizzBuzz when number is divisible by both 3&5
+for (let i=1; i<=100; i++) {
+    if (i % 3 === 0) {
+        i % 5 === 0 ? console.log("FizzBuzz") : console.log("Fizz");
     }
-    if (x === 1) {
-        return false;
-    }
-    if (x > 1) {
-        return (isEven(x-2));
-    }
+    i % 5 === 0 ? console.log("Buzz") : console.log(i);
 }
-
-    //Fix previous to handle negative numbers
-    function isEven(x) {
-        x = Math.abs(x);
-        if (x === 0) {
-            return true;
-        }
-        if (x === 1) {
-            return false;
-        }
-        if (x > 1) {
-            return (isEven(x-2));
-        }
-    }
-
-console.log(isEven(75));
-*///2.3 Write function that takes a string and returns how many B's are in the given string
+*///1.3 Create an 8x8 chessboard pattern using pound signs
 /*
-function countBs(str) {
-    let num = 0;
-    for (let i = 0; i <= str.length-1 ; i++) {
-        if (str.charAt(i) === "B") {
-            num += 1;
+for (let y =0; y<8; y++) {
+    let str = "";
+    for (let x = 0; x < 8; x++) {
+        if (x % 2 === 0) { 
+        y % 2 === 0 ? str += " " : str += "#" ;
+        } else { 
+        y % 2 === 0 ? str += "#" : str += " "; 
         }
     }
-    return num;
+    console.log(str);
 }
-
-    //2.4 Rewrite countBs to check for any char
-    function countChar(str, chk) {
-        let num = 0;
-        for (let i = 0; i <= str.length-1 ; i++) {
-            if (str.charAt(i) === chk) {
-                num += 1;
-            }
-        }
-        return num;
-    }
-
-console.log(countChar("abcd", "e")); 
 */
+

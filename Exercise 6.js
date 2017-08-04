@@ -1,4 +1,4 @@
-//Create a smarter plant eater that reprouces slower and allows the plants to never leave.
+//6.1 Create a smarter plant eater that reprouces slower and allows the plants to never leave.
 //Create a target property of the plant eater, slightly reduced intial reproduction energy.
 function SmartPlantEater() {
     this.energy = 30;
@@ -10,7 +10,7 @@ function SmartPlantEater() {
 //planteaters also require more energy to reproduce
 SmartPlantEater.prototype.act = function(view) {
     var space = view.find(" ");
-    if (this.energy > 90 && space)
+    if (this.energy > 60 && space) //90 exercise 1
       return {type: "reproduce", direction: space};
     var plant = view.find("*");
     var cluster = false;
@@ -25,4 +25,21 @@ SmartPlantEater.prototype.act = function(view) {
       return {type: "eat", direction: plant};
     if (space || cluster)
       return {type: "move", direction: space};
+}
+
+//6.2 Create a predator for the plantEater called Tiger
+
+function Tiger() {
+    this.energy = 120;
+    this.target = "n";
+}
+
+Tiger.prototype.act = function(view) {
+    var space = view.find(" ");
+    var plantEater = view.find("O");
+    if (plantEater)
+        return {type: "eat", direction: plantEater};
+      if (space)
+        return {type: "move", direction: space};
+  }
 }

@@ -35,9 +35,7 @@ function SmartPlantEater() {
     this.target = "n";
 }
 
-//Using standard plant eater act method with the modification that
-//planteaters are allowed to eat only if the plant it is targeting has more than 1 nearby plant
-//planteaters also require more energy to reproduce
+//Modified plantEater to be less picky with plant selection as world is more diverse
 SmartPlantEater.prototype.act = function(view) {
     var space = view.find(" ");
     if (this.energy > 65 && space) //decrease starting energy
@@ -66,7 +64,6 @@ Tiger.prototype.act = function(view) {
         return {type: "reproduce", direction: space};
     var plantEater = view.find("O");
     if (plantEater)
-        var attackHit = false;
         if (Math.random() > .75) //slippery plantEaters!
             return {type: "eat", direction: plantEater};
     if (space)

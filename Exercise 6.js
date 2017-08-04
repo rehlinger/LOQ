@@ -67,7 +67,7 @@ Tiger.prototype.act = function(view) {
     var plantEater = view.find("O");
     if (plantEater)
         var attackHit = false;
-        if (Math.random() > .8) 
+        if (Math.random() > .6) 
             return {type: "eat", direction: plantEater};
     if (space)
         return {type: "move", direction: space};

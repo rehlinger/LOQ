@@ -53,7 +53,8 @@ SmartPlantEater.prototype.act = function(view) {
       return {type: "eat", direction: plant};
     if (space)
       return {type: "move", direction: space};
-}
+};
+
 function Tiger() {
     this.energy = 120;
 }
@@ -68,7 +69,6 @@ Tiger.prototype.act = function(view) {
             return {type: "eat", direction: plantEater};
     if (space)
         return {type: "move", direction: space};
-  }
-}
-
+};
 */
+

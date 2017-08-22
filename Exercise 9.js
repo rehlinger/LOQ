@@ -30,7 +30,7 @@ verify(/\w{7}/,
     ["no", "hotten totten tenten"]);
 
 //a word without the letter e
-verify(/\s[^e]\s/,
+verify(/\b[^\se]+\b/,
     ["red platypus", "wobbling nest"],
     ["earth bed", "learning ape"]);
 
@@ -47,3 +47,26 @@ no.forEach(function(s) {
    console.log("Unexpected match for '" + s + "'");
 });
 }
+
+//9.2 Replace the all inline quotations from single to double, while retaining contractions as single
+var text = "'fhjaklj fh askl' akljfhalk's 'asjkdfhjkl'";
+console.log(text.replace(/'(?!s\s|m\s|ve\s|ll\s|d\s|re\s|t\s)/g, '"'));
+console.log(text.replace(/'($|\W)|(^|\W)'/g, '$1"$2'));
+
+
+//9.3 Test for valid JavaScript number formats
+var number = /^(\+|\-)?((\.\d+)|(\d+\.?\d*))((E|e)(\+|\-)?\d+)?$/;
+
+// Tests:
+["1", "-1", "+15", "1.55", ".5", "5.", "1.3e2", "1E-4",
+ "1e+12"].forEach(function(s) {
+  if (!number.test(s))
+    console.log("Failed to match '" + s + "'");
+});
+["1a", "+-1", "1.2.3", "1+1", "1e4.5", ".5.", "1f5",
+ "."].forEach(function(s) {
+  if (number.test(s))
+    console.log("Incorrectly accepted '" + s + "'");
+});
+
+//Regulex Tool

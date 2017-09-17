@@ -98,7 +98,7 @@ drawSpiral(.6, 0, 90);
 cx.translate(0,150);
 drawSpiral2(30, 2, 1);
 
-//create a star
+//Create a star
 function drawStar(points, radius) {
     if (points < 3)
         return;

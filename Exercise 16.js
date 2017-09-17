@@ -1,10 +1,11 @@
 //16.1 Draw given shapes
 document.querySelector("body").style.margin = "0";
-var cx = document.querySelector("canvas").getContext("2d");
-let bb = document.querySelector("canvas");
-bb.style.border = "15px solid Chocolate";
-bb.style.backgroundColor = "rgba(220,230,220,1)";
+let cx = document.querySelector("canvas").getContext("2d");
+let bg = document.querySelector("canvas");
+bg.style.border = "15px solid Chocolate";
+bg.style.backgroundColor = "rgba(220,230,220,1)";
 
+//Create a trapazoid
 function drawTrap(bottom,top,height) {
     cx.beginPath();
     cx.moveTo(0,height);
@@ -14,10 +15,10 @@ function drawTrap(bottom,top,height) {
     cx.closePath();
     cx.stroke();
 }
-
 cx.translate(20,50);
 drawTrap(200,100,100);
 
+//Create a diamond
 function drawDiamond(size) {
     cx.save();
     cx.beginPath();
@@ -26,10 +27,10 @@ function drawDiamond(size) {
     cx.fillRect(0,0,size,size);
     cx.restore();
 }
-
 cx.translate(250,0);
 drawDiamond(100);
 
+//Create a spring 
 function drawSpring(lines, width, dist) {
     cx.beginPath();
     cx.moveTo(0,0);
@@ -40,7 +41,6 @@ function drawSpring(lines, width, dist) {
     }
     cx.stroke();    
 }
-
 cx.translate(200,0);
 drawSpring(12,100,8);
 
@@ -93,13 +93,12 @@ function drawSpiral2(resolution, scale, direction) {
     }
     cx.stroke();
 }
-
 cx.translate(200,50);
 drawSpiral(.6, 0, 90);
-
 cx.translate(0,150);
 drawSpiral2(30, 2, 1);
 
+//create a star
 function drawStar(points, radius) {
     if (points < 3)
         return;
@@ -128,4 +127,94 @@ function drawStar(points, radius) {
 cx.translate(150,-150);
 drawStar(8, 60);
 
-//16.2 
+//16.2 Create a text overlay to the pie chart function
+var results = [
+    {name: "Satisfied", count: 800, color: "lightblue"},
+    {name: "Neutral", count: 563, color: "lightgreen"},
+    {name: "Unsatisfied", count: 120, color: "pink"},
+    {name: "No comment", count: 151, color: "silver"}
+  ];
+
+var cx2 = document.getElementById("part2").getContext("2d");
+var total = results.reduce(function(sum, choice) {
+  return sum + choice.count;
+}, 0);
+
+var currentAngle = -0.5 * Math.PI;
+var centerX = 300, centerY = 150;
+
+results.forEach(function(result) {
+  var sliceAngle = (result.count / total) * 2 * Math.PI;
+  cx2.beginPath();
+  cx2.arc(centerX, centerY, 100,
+         currentAngle, currentAngle + sliceAngle);
+  cx2.lineTo(centerX, centerY);
+  cx2.fillStyle = result.color;
+  cx2.fill();
+  //start of text leader
+  cx2.beginPath();
+  let textAngle = currentAngle + sliceAngle/2;
+  cx2.moveTo(
+      centerX + 100 * Math.cos(textAngle),
+      centerY + 100 * Math.sin(textAngle)
+  );
+  cx2.lineTo(
+      centerX + 110 * Math.cos(textAngle),
+      centerY + 110 * Math.sin(textAngle)
+  );
+  cx2.strokeStyle = "gray";
+  cx2.stroke();
+  cx2.textAlign = "center";
+  cx2.fillStyle = "black";  
+  cx2.textBaseline = "middle";
+  cx2.fillText(result.count, centerX + 120 * Math.cos(textAngle),centerY + 120 * Math.sin(textAngle));
+  currentAngle += sliceAngle;
+});
+
+//16.3 Create a bouncing ball within a canvas element
+document.getElementById("part3").style.border = "4px solid gray";
+var cx3 = document.getElementById("part3").getContext("2d");
+var lastTime = null;
+function frame(time) {
+    if (lastTime != null)
+        updateAnimation(Math.min(100, time - lastTime) / 1000);
+    lastTime = time;
+    requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+let pos1x = document.getElementById("part3").getAttribute("width")/2,
+    pos1y = document.getElementById("part3").getAttribute("height")/2,
+    ballAngle = Math.random()*2*Math.PI;
+function updateAnimation(step) {
+    cx3.clearRect(0, 0, document.getElementById("part3").getAttribute("width"), 
+                        document.getElementById("part3").getAttribute("height"));
+    cx3.beginPath();
+    let speed = 200,
+        ballRadius = 10,
+        canvasHeight = document.getElementById("part3").getAttribute("height"),
+        canvasWidth = document.getElementById("part3").getAttribute("width"),
+        pos2x = pos1x + speed * step * Math.cos(ballAngle),
+        pos2y = pos1y + speed * step * Math.sin(ballAngle);
+    if (pos2x+ballRadius > canvasWidth) {
+        pos2x = (canvasWidth-ballRadius) - (pos2x - (canvasWidth-ballRadius));
+        ballAngle = Math.PI-ballAngle;
+    }
+    if (pos2x-ballRadius < 0) {
+        pos2x = ballRadius + (ballRadius - pos2x);
+        ballAngle = Math.PI-ballAngle;
+    }
+    if (pos2y+ballRadius > canvasHeight) {
+        pos2y = (canvasHeight-ballRadius) - (pos2y - (canvasHeight-ballRadius));
+        ballAngle = -ballAngle;
+    }
+    if ((pos2y-ballRadius) < 0) {
+        pos2y = ballRadius + (ballRadius - pos2y);
+        ballAngle = -ballAngle;   
+    }
+    cx3.arc(pos2x, pos2y, ballRadius, 0, 2 * Math.PI);
+    cx3.fill();
+    cx3.fillStyle = "green";
+    pos1x = pos2x;
+    pos1y = pos2y;
+  }
+

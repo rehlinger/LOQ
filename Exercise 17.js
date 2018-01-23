@@ -1,5 +1,4 @@
 //17.1 Fetch 3 resources from server using http
-
 let url = "http://eloquentjavascript.net/author";
 let resourceType = ["text/html", "text/paintext", "application/json","application/rainbows+unicorns"];
 
@@ -17,5 +16,4 @@ resourceType.map( type => {
     } catch (e) {
         console.log("Error fetching "+type+":\n"+e+"\n");
     }
-
 });

@@ -1,4 +1,4 @@
-//Add keyboard control to the div element of the app
+//19.1 Add keyboard control to the div element of the app
   // The original PixelEditor class. Extend the constructor.
   class PixelEditor {
     constructor(state, config) {
@@ -18,24 +18,19 @@
         tabIndex: 0,
         onkeydown: (event) => {
             if (event.key == "d") {
-              this.state.tool = "draw";
-              this.syncState(this.state);
+              dispatch(this.state.tool= "draw");
             }
             if (event.key == "f") {
-              this.state.tool = "fill";
-              this.syncState(this.state);
+              dispatch(this.state.tool= "fill");
             }
             if (event.key == "r") {
-              this.state.tool = "rectangle";
-              this.syncState(this.state);
+              dispatch(this.state.tool= "rectangle");
             }
             if (event.key == "p") {
-              this.state.tool = "pick";
-              this.syncState(this.state);
+              dispatch(this.state.tool= "pick");
             }
             if ((event.ctrlKey || event.metaKey) && event.key == "z") {
               dispatch({undo: true});
-              this.syncState(this.state);
             }
         }
         //End of edit
@@ -50,6 +45,47 @@
     }
   }
 
-//   document.querySelector("div")
-//     .appendChild(startPixelEditor({}));
+//19.2 Improve the syncState method to only redraw pixels that are changing.
+//----First idea is to create a diff array that will tell the drawing function what values change.
+  // Change this method
+  PictureCanvas.prototype.syncState = function(picture) {
+    if (this.picture == picture) return;
+    if (this.picture !== undefined) {
+      let updateArr = [];
+      this.picture.pixels.map( (px,i) => {
+          if(px !== picture.pixels[i]) {} else {
+            this.picture.pixels[i] = px;
+            updateArr.push(i);
+          }
+      });
+      drawPicture(this.picture, this.dom, scale, updateArr);
+      this.picture = picture;
+      updateArr = [];
+    } else {
+      this.picture = picture;
+      drawPicture(this.picture, this.dom, scale);
+    }
+  };
 
+  // You may want to use or change this as well
+  function drawPicture(picture, canvas, scale, updateArr) {
+    canvas.width = picture.width * scale;
+    canvas.height = picture.height * scale;
+    let cx = canvas.getContext("2d");
+    if (updateArr !== undefined) {
+      updateArr.map(px => {
+        cx.fillStyle = picture.pixels[px];
+        cx.fillRect((px-canvas.height*Math.floor(px/canvas.width)) * scale, Math.floor(px/canvas.height) * scale, scale, scale);
+      });
+    } else {
+      for (let y = 0; y < picture.height; y++) {
+        for (let x = 0; x < picture.width; x++) {
+          cx.fillStyle = picture.pixel(x, y);
+          cx.fillRect(x * scale, y * scale, scale, scale);
+        }
+      }
+    }
+  }
+
+  document.querySelector("div")
+    .appendChild(startPixelEditor({})

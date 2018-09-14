@@ -50,34 +50,40 @@
   // Change this method
   PictureCanvas.prototype.syncState = function(picture) {
     if (this.picture == picture) return;
-    if (this.picture !== undefined) {
-      let updateArr = [];
-      this.picture.pixels.map( (px,i) => {
-          if(px !== picture.pixels[i]) {} else {
-            this.picture.pixels[i] = px;
-            updateArr.push(i);
-          }
-      });
-      drawPicture(this.picture, this.dom, scale, updateArr);
+    if(this.picture !== undefined) {
+      	let modArr = [];
+      	picture.pixels.map( (px,i) => {
+          if (px !== this.picture.pixels[i]) {modArr.push([i,picture.pixels[i]]);}
+        });
+    	drawPicture(picture, this.dom, scale, modArr);
       this.picture = picture;
-      updateArr = [];
     } else {
-      this.picture = picture;
-      drawPicture(this.picture, this.dom, scale);
+		this.picture = picture;
+    drawPicture(this.picture, this.dom, scale);
     }
   };
 
   // You may want to use or change this as well
-  function drawPicture(picture, canvas, scale, updateArr) {
-    canvas.width = picture.width * scale;
-    canvas.height = picture.height * scale;
-    let cx = canvas.getContext("2d");
-    if (updateArr !== undefined) {
-      updateArr.map(px => {
-        cx.fillStyle = picture.pixels[px];
-        cx.fillRect((px-canvas.height*Math.floor(px/canvas.width)) * scale, Math.floor(px/canvas.height) * scale, scale, scale);
+  function drawPicture(picture, canvas, scale, modArr) {
+    function findY(px) {
+        return Math.floor(px/picture.width);
+    }
+    function findX(px) {
+        return px-findY(px)*picture.width
+    }
+    if (modArr !== undefined) {
+      let cx = canvas.getContext("2d");
+		  modArr.map( px => {
+        console.log("x:", findX(px[0]), "y:", findY(px[0]), "color:", px[1]);
+        let x = findX(px[0]);
+        let y = findY(px[0]);
+        cx.fillStyle = px[1];
+        cx.fillRect(x * scale, y * scale, scale, scale);
       });
     } else {
+      canvas.width = picture.width * scale;
+      canvas.height = picture.height * scale;
+      let cx = canvas.getContext("2d");
       for (let y = 0; y < picture.height; y++) {
         for (let x = 0; x < picture.width; x++) {
           cx.fillStyle = picture.pixel(x, y);
@@ -88,4 +94,43 @@
   }
 
   document.querySelector("div")
-    .appendChild(startPixelEditor({})
+    .appendChild(startPixelEditor({}));
+
+    //19.3 Create a filled circle tool.
+    function circle(pos, state, dispatch) {
+      let start = pos;
+        function drawCircle(start) {
+          //console.log("start", start, "pos", pos);
+          let xCenter = pos.x;
+          let yCenter = pos.y;
+          let radius = Math.floor(Math.sqrt((start.x-xCenter) ** 2 + (start.y-yCenter) ** 2));
+          //console.log(state);
+          let xStart = xCenter - radius;
+          if(xStart < 0) xStart = 0;
+          let yStart = yCenter - radius;
+          if(yStart < 0) yStart = 0;
+          let xEnd = xCenter + radius;
+          if(xEnd >= state.picture.width) xEnd = state.picture.width-1;
+          let yEnd = yCenter + radius;
+          if(yEnd >= state.picture.height) yEnd = state.picture.height-1;
+          console.log(xStart, yStart, xEnd, yEnd)
+          let drawn = [];
+          for (let y = yStart; y <= yEnd; y++) {
+            for (let x = xStart; x <= xEnd; x++) {
+              if (Math.sqrt(Math.abs(x-xCenter)**2+Math.abs(y-yCenter)**2) <= radius) {
+                drawn.push({x, y, color: state.color});
+                console.log(x,y)
+              }
+            }
+          }
+        dispatch({picture: state.picture.draw(drawn)});
+        }
+        drawCircle(start)
+        return drawCircle;
+      }
+    
+    let dom = startPixelEditor({
+      tools: Object.assign({}, baseTools, {circle})
+    });
+    document.querySelector("div").appendChild(dom);
+    

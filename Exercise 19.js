@@ -96,36 +96,36 @@
   document.querySelector("div")
     .appendChild(startPixelEditor({}));
 
-    //19.3 Create a filled circle tool.
+//19.3 Create a filled circle tool.
     function circle(pos, state, dispatch) {
-      let start = pos;
-        function drawCircle(start) {
+      let currentPos = pos;
+        function drawCircle(currentPos) {
           //console.log("start", start, "pos", pos);
           let xCenter = pos.x;
           let yCenter = pos.y;
-          let radius = Math.floor(Math.sqrt((start.x-xCenter) ** 2 + (start.y-yCenter) ** 2));
+          let radius = Math.sqrt((currentPos.x-xCenter) ** 2 + (currentPos.y-yCenter) ** 2);
           //console.log(state);
-          let xStart = xCenter - radius;
+          let xStart = xCenter - Math.floor(radius);
           if(xStart < 0) xStart = 0;
-          let yStart = yCenter - radius;
+          let yStart = yCenter - Math.floor(radius);
           if(yStart < 0) yStart = 0;
-          let xEnd = xCenter + radius;
+          let xEnd = xCenter + Math.floor(radius);
           if(xEnd >= state.picture.width) xEnd = state.picture.width-1;
-          let yEnd = yCenter + radius;
+          let yEnd = yCenter + Math.floor(radius);
           if(yEnd >= state.picture.height) yEnd = state.picture.height-1;
           console.log(xStart, yStart, xEnd, yEnd)
           let drawn = [];
+
           for (let y = yStart; y <= yEnd; y++) {
             for (let x = xStart; x <= xEnd; x++) {
               if (Math.sqrt(Math.abs(x-xCenter)**2+Math.abs(y-yCenter)**2) <= radius) {
                 drawn.push({x, y, color: state.color});
-                console.log(x,y)
               }
             }
           }
         dispatch({picture: state.picture.draw(drawn)});
         }
-        drawCircle(start)
+        drawCircle(currentPos)
         return drawCircle;
       }
     

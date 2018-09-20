@@ -134,3 +134,89 @@
     });
     document.querySelector("div").appendChild(dom);
     
+//19.4 Create a line tool that will create a line between two points. 
+//Then, change the draw tool to account for the gaps that occur when drawing.
+
+function draw(pos, state, dispatch) {
+  let first = pos;
+  let drawn = [];
+
+  function drawPixel(pos) {
+    console.log("PIX:", pos, "from", first)
+    let delta = { x: pos.x - first.x, y: pos.y - first.y }
+    if (Math.abs(delta.x) > 1 || Math.abs(delta.y) > 1) {
+      lineRecur(first, first, pos, drawn, state);
+    } else {
+      drawn.push({ x: first.x, y: first.y, color: state.color });
+      drawn.push({ x: pos.x, y: pos.y, color: state.color });
+    }
+    first = pos;
+    dispatch({ picture: state.picture.draw(drawn) });
+  }
+  drawPixel(pos);
+
+  return drawPixel;
+}
+
+function line(pos, state, dispatch) {
+  let start = pos;
+  function drawLine(end) {
+    //console.log(startPos, currentPos);
+    let drawn = [];
+    drawn.push({ x: end.x, y: end.y, color: state.color });
+
+    lineRecur(start, start, end, drawn, state);
+
+    console.log("----------start", start, "end", end, "state:", state, drawn)
+
+    dispatch({ picture: state.picture.draw(drawn) })
+  }
+  drawLine(pos)
+  return drawLine
+}
+
+function lineRecur(start, cur, end, drawn, state) {
+  console.log("---RECUR:", start, cur, end, drawn, state)
+  let delta = { x: end.x - cur.x, y: end.y - cur.y };
+  if (delta.x === 0 && delta.y === 0) return
+  drawn.push({ x: cur.x, y: cur.y, color: state.color });
+  let slope = (end.y - start.y) / (end.x - start.x);
+  //console.log("Slope:",slope)
+  if (cur.x === end.x || cur.y === end.y) { return straightConnect(cur, end); }
+  function straightConnect(start, end) {
+    let len = 0;
+    //console.log("straight:",start, end)
+    if (end.x - start.x > 1 || end.x - start.x < 1) {
+      len = end.x - start.x;
+      for (let i = 1; i < Math.abs(len); i += 1) {
+        let fillDir = len <= 1 ? -i : i;
+        drawn.push({ x: start.x + fillDir, y: start.y, color: state.color });
+      }
+    }
+    if (end.y - start.y > 1 || end.y - start.y < 1) {
+      len = end.y - start.y;
+      for (let i = 1; i < Math.abs(len); i += 1) {
+        let fillDir = len <= 1 ? -i : i;
+        drawn.push({ x: start.x, y: start.y + fillDir, color: state.color });
+      }
+    }
+  }
+  let availableMoves = [{ x: end.x - start.x > 0 ? 1 : -1, y: end.y - start.y > 0 ? 1 : -1 },
+  { x: end.x - start.x > 0 ? 1 : -1, y: 0 },
+  { x: 0, y: end.y - start.y > 0 ? 1 : -1 }];
+  function findOffset(point) {
+    let pointInt = point.x - start.x === 0 ? point.y - start.y : (point.y - start.y) - ((point.x - start.x) / -slope);//?
+    let xVal = pointInt / (slope - (1 / (-slope)));//?
+    let yVal = slope * xVal;//?
+    return Math.sqrt(((point.x - start.x) - xVal) ** 2 + ((point.y - start.y) - yVal) ** 2)
+  }
+  //console.log("MOVES",availableMoves)
+  let bestMove = availableMoves.reduce((col, a) => {
+    let offset = findOffset({ x: a.x + cur.x, y: a.y + cur.y });
+    if (offset < findOffset({ x: col.x + cur.x, y: col.y + cur.y })) {
+      col = a;
+    }
+    return col;
+  });
+  lineRecur(start, { x: cur.x + bestMove.x, y: cur.y + bestMove.y }, end, drawn, state)
+}
